@@ -28,8 +28,8 @@ def group_posts(request, slug):
     group = get_object_or_404(Group, slug=slug)
     posts = Post.objects.filter(group=group).order_by("-pub_date")[:12]
     context = {
-        "posts": posts,
-        "group": group
+        "post": posts,
+        "group": group,
     }
     return render(request, "group.html", context)
 

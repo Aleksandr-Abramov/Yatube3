@@ -38,7 +38,6 @@ class Post(models.Model):
         return self.text[:15]
 
 
-
 class Group(models.Model):
     """Модель для Группы"""
     title = models.CharField(verbose_name="Заголовок сообщества", max_length=255)
@@ -47,6 +46,7 @@ class Group(models.Model):
 
     def __str__(self):
         return self.title
+
 
 class Comment(models.Model):
     """Модель для Комментариев"""
