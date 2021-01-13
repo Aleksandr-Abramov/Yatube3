@@ -15,6 +15,8 @@ urlpatterns = [
     path('<str:username>/<int:post_id>/', views.post_view, name='post'),
     # Страница редактирования поста
     path('<str:username>/<int:post_id>/edit/', views.post_edit, name='post_edit'),
+    # Комментарии
+    path("<username>/<int:post_id>/comment", views.add_comment, name="add_comment"),
     path('404/', views.page_not_found, name="page404"),
     path('500/', views.server_error, name="page500")
 ]

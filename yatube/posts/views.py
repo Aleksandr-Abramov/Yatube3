@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.shortcuts import get_object_or_404, get_list_or_404
+from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 
@@ -8,6 +8,7 @@ from .models import Group
 from .models import User
 
 from .forms import PostForm
+from .forms import FormComments
 
 
 def index(request):
@@ -50,6 +51,7 @@ def new_post(request):
         post.save()
         return redirect("index")
 
+
 def profile(request, username):
     """Профайл пользователя User and Post"""
     user = get_object_or_404(User, username=username)
@@ -63,17 +65,18 @@ def profile(request, username):
     }
     return render(request, "profile.html", context)
 
+
 def post_view(request, username, post_id):
     """Просмотр записи Post"""
     post = get_object_or_404(Post, id=post_id, author__username=username)
     author_posts = post.author
-    # comments = post.comments.all()
-    # form = FormComments()
+    comments = post.comments.all()
+    form = FormComments()
     context = {
         "author_posts": author_posts,
         "post": post,
-        # "form": form,
-        # "comments": comments
+        "form": form,
+        "comments": comments
     }
     return render(request, "post.html", context)
 
@@ -99,6 +102,28 @@ def post_edit(request, username, post_id):
     if form.is_valid():
         form.save()
         return redirect("post", username=request.user.username, post_id=post_id)
+
+
+def add_comment(request, username, post_id):
+    """Форма комментариев"""
+    post = get_object_or_404(Post, id=post_id)
+    author = get_object_or_404(User, username=request.user)
+
+    if request.method != "POST":
+        form = FormComments()
+        context = {
+            "form": form
+        }
+        return render(request, "includes/comments.html", context)
+
+    form = FormComments(request.POST)
+
+    if form.is_valid():
+        comment = form.save(commit=False)
+        comment.post = post
+        comment.author = author
+        comment.save()
+        return redirect("post", username=username, post_id=post_id)
 
 
 def page_not_found(request, exception):
