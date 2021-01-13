@@ -127,3 +127,10 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+#my git
+.idea/
+yatube/static/
+yatube/posts/static/
+send_emails/
+media/
